@@ -1,0 +1,29 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="https://cdn.mysitemapgenerator.com/api/ymlpreview_s.xsl"?>
+		<!--	created with www.mysitemapgenerator.com	-->
+		<yml_catalog date="2023-07-17 23:05">
+		<shop>
+			<name>Dresscode-moscow</name>
+			<company>Dresscode-moscow</company>
+			<url>https://dresscode-moscow.ru/</url>
+		<currencies>
+			<currency id="RUB" rate="1" />
+		</currencies>
+		<categories>
+			<category id="2731707003">Товары в наличии</category>
+		</categories>
+		<offers>
+			<offer id="1706181615" available="true">
+			       <url>https://dresscode-moscow.ru/compare?inCompareProductId=10446</url>
+			       <price>1000</price>
+			       <currencyId>RUB</currencyId>
+			       <categoryId>2731707003</categoryId>
+				<delivery>true</delivery>
+			       <name>Сравнение товаров</name>
+				<description>Сравнение товаров</description>
+				<param name="Вес" unit="кг">0</param>
+			</offer>
+		</offers>
+</shop>
+</yml_catalog>
